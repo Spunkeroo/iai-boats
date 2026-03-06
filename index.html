@@ -508,7 +508,7 @@ function renderBoats() {
 // =====================
 async function loadBTC() {
   try {
-    const d = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd').then(r => r.json());
+    const d = await (async()=>{let _p=null;try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');if(r.ok){const d=await r.json();if(d&&d.bitcoin)_p=d;}}catch(e){}if(!_p)try{const r=await fetch('https://api.coincap.io/v2/assets/bitcoin');if(r.ok){const d=await r.json();if(d&&d.data)_p={bitcoin:{usd:parseFloat(d.data.priceUsd)}};}}catch(e){}if(!_p)try{const r=await fetch('https://api.coinpaprika.com/v1/tickers/btc-bitcoin?quotes=USD');if(r.ok){const d=await r.json();if(d&&d.quotes&&d.quotes.USD)_p={bitcoin:{usd:d.quotes.USD.price}};}}catch(e){}return _p||{};})();
     if (d.bitcoin) {
       const formatted = '$' + d.bitcoin.usd.toLocaleString();
       const el = document.getElementById('btc-price');
